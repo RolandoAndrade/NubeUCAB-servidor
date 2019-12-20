@@ -66,9 +66,12 @@ class ServerSocket : private Socket
 
 		void close()
 		{
-
+			if(!Socket::close())
+			{
+				throw SocketException(strerror(errno));
+			}
 		}
-		
+
 		int fd();
 		int port();
 		std::string host();
