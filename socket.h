@@ -158,9 +158,18 @@ class Socket
 			return ntohs(local_address.sin_port);
 		}
 
-		std::string getHost();
+		std::string getHost()
+		{
+			struct sockaddr_in local_address;
+			socklen_t address_length = sizeof(local_address);
+			getsockname(_sockfd, (struct sockaddr*)&local_address, &address_length);
+			return std::string(inet_ntoa( local_address.sin_addr));
+		}
 
-		int getFD(){ return sockfd;}
+		int getFD()
+		{ 
+			return sockfd;
+		}
 
 		int setFD(int fd)
 		{
