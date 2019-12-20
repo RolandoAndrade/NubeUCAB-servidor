@@ -19,6 +19,18 @@ class Socket
 		struct sockaddr_in maddress;
 
 	public:
+		
+		/*Longitud del nombre del host*/
+		const int MAXHOSTNAME = 200;
+
+		/*Puerto de datos*/
+		const int BACKLOG = 20;
+
+		/*Número de conexiones permitidas*/
+		const int MAXCONNECTIONS = 10;
+
+		/*Longitud máxima de datos que se puede recibir*/
+		const int MAXRECV = 2048;
 
 		Socket()
 		{
@@ -180,16 +192,4 @@ class Socket
 
 			return 1;
 		}
-
-		/*Longitud del nombre del host*/
-		const int MAXHOSTNAME = 200;
-
-		/*Puerto de datos*/
-		const int BACKLOG = 20;
-
-		/*Número de conexiones permitidas*/
-		const int MAXCONNECTIONS = 10;
-
-		/*Longitud máxima de datos que se puede recibir*/
-		const int MAXRECV = 2048;
 };
