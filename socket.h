@@ -19,7 +19,7 @@ class Socket
 		struct sockaddr_in maddress;
 
 	public:
-		
+
 		/*Longitud del nombre del host*/
 		const int MAXHOSTNAME = 200;
 
@@ -65,7 +65,7 @@ class Socket
 			return setsockopt(sockfd,SOL_SOCKET,SO_REUSEADDR,&accept,sizeof(int)) != -1;
 		}
 
-		/*Servidor: Forjar enlace a puerto*/
+		/*Servidor: Enlazar a puerto*/
 		int bind(int port)
 		{
 			if(!is_valid())
