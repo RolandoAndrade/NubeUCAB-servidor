@@ -25,17 +25,37 @@ public:
 
 	FTPRequest(string c)
 	{
+		setRequest(c);
+	}
+
+	FTPRequest(string c,string args)
+	{
+		setRequest(c,args);
+	}
+
+	FTPRequest(string c, vector<string> flags)
+	{
+		setRequest(c,flags);
+	}
+
+	FTPRequest(string c, vector<string> flags, vector<string> args)
+	{
+		setRequest(c,flags,args);
+	}
+	
+	void setRequest(string c)
+	{
 		cmd = c;
 		argv = "";
 	}
 
-	FTPRequest(string c,string a)
+	void setRequest(string c,string args)
 	{
 		cmd = c;
-		argv = " "+a;
+		argv = " "+args;
 	}
 
-	FTPRequest(string c, vector<string> flags)
+	void setRequest(string c, vector<string> flags)
 	{
 		cmd = c;
 		argv = "";
@@ -45,12 +65,15 @@ public:
 		}
 	}
 
-	FTPRequest(string, vector<string>, vector<string>);
-	
-	void setRequest(string);
-	void setRequest(string,string);
-	void setRequest(string, vector<string>);
-	void setRequest(string, vector<string>, vector<string>);
+	void setRequest(string c, vector<string> flags, vector<string> args)
+	{
+		setRequest(c,flags);
+		for(string f: args)
+		{
+			argv += " " + f;
+		}
+	}
+
 	string getRequest();
 	string getRequest(string);
 
