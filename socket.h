@@ -78,7 +78,22 @@ class Socket
 		}
 
 		/*Servidor: Aceptar conexión*/
-		int accept(Socket&);
+		int accept(Socket& child)
+		{
+			if (!is_valid())
+			{
+				return 0;
+			}
+			int maddresslen = sizeof(maddress);
+			int fd = ::accept(sockfd, (struct sockaddr *)&maddress,(socklen_t *) &maddresslen);
+
+			if(fd == -1)
+			{
+				return 0;
+			}
+
+			return child.setFD(fd);
+		}
 
 		/*Cliente: Conecta al servicio del host en el puerto*/
 		int connect(std::string host,int port)
@@ -110,7 +125,15 @@ class Socket
 
 		int getFD(){ return sockfd;}
 
-		void setFD(int fd){}
+		int setFD(int fd)
+		{
+			if(fd==-1)
+			{
+				return 0;
+			}
+
+			return 1;
+		}
 
 		/*Longitud del nombre del host*/
 		const int MAXHOSTNAME = 200;
