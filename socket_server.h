@@ -46,7 +46,15 @@ class ServerSocket : private Socket
 			return *this;
 		}
 
-		ServerSocket& operator >> ( std::string& );
+		ServerSocket& operator >> (std::string& data)
+		{
+			if(Socket::recv(data)==-1)
+			{
+				throw SocketException(strerror(errno));
+			}
+
+			return *this;
+		}
 		void accept(ServerSocket&);
 		void close();
 		int fd();
