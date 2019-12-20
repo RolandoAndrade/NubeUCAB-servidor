@@ -111,7 +111,15 @@ class Socket
 		}
 
 		/*Envía una cadena de caracteres*/
-		int send(std::string str);
+		int send(std::string str)
+		{
+			if(!is_valid())
+			{
+				return 0;
+			}
+			
+			return ::send(sockfd, str.c_str(), str.size(), 0);
+		}
 
 		/*Recibir una cadena de caracteres y retorna la longitud de la cadena*/
 		int recv(std::string& buf);
