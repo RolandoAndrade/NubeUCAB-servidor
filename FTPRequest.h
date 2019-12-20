@@ -28,8 +28,13 @@ public:
 		cmd = c;
 		argv = "";
 	}
-	
-	FTPRequest(string,string);
+
+	FTPRequest(string c,string argv)
+	{
+		cmd = c;
+		argv = " "+argv;
+	}
+
 	FTPRequest(string, vector<string>);
 	FTPRequest(string, vector<string>, vector<string>);
 	
