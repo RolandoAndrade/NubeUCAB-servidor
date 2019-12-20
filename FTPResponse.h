@@ -73,7 +73,34 @@ class FTPResponse {
 			return atoi(status.c_str());
 		}
 		
-		
-		
-		int getPort();
+		int getPort()
+		{
+			string::size_type firstPos = message.find("(", 0);
+			string::size_type lastPos = message.find(")",firstPos);
+
+			string port_string = message.substr(firstPos+1,lastPos-firstPos-1);
+			
+			int c = 0;
+			string host="";
+			firstPos = 0;
+
+			while(c<4)
+			{
+				firstPos = port_string.find(",", firstPos);
+				if(c<3)
+				{
+					port_string[firstPos] = '.';
+				}
+				c++;
+			}
+
+			host = port_string.substr(0,firstPos);
+			port_string = port_string.substr(firstPos+1);
+			firstPos = port_string.find(",");
+
+			int port = 256 * atoi(port_string.substr(0,firstPos).c_str());
+			port += atoi(port_string.substr(firstPos+1).c_str());
+			
+			return port;
+		}
 };
