@@ -74,7 +74,39 @@ public:
 		}
 	}
 
-	string getRequest();
-	string getRequest(string);
-
+	string getRequest()
+	{
+		if(argv == "")	
+		{
+			return cmd + "\r\n";
+		}
+		else if(cmd == "PORT")
+		{
+			stringstream arg;
+			for(char c:argv)
+			{
+				if(c=='.')
+				{
+					arg<<',';
+				}
+				if(c==':')
+				{
+					arg<<',';
+					int port = atoi(argv.substr(i+1).c_str());
+					arg<<port/256<<","<<port%256;
+					break;
+				}
+				else
+				{
+					//arg<<_cmd[i];
+					arg<<c;
+				}
+			}
+			return cmd+" "+argv.str()+"\r\n";
+		}
+		else
+		{
+			return cmd + argv +"\r\n";
+		}
+	}
 };
