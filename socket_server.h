@@ -55,8 +55,20 @@ class ServerSocket : private Socket
 
 			return *this;
 		}
-		void accept(ServerSocket&);
-		void close();
+
+		void accept(ServerSocket &ssocket)
+		{
+			if(!Socket::accept(ssocket))
+			{
+				throw SocketException(strerror(errno));
+			}
+		}
+
+		void close()
+		{
+
+		}
+		
 		int fd();
 		int port();
 		std::string host();
