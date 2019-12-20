@@ -22,24 +22,21 @@ class Socket
 
 		~Socket();
 
-		bool is_valid()
-		{ 
-			return sockfd != -1; 
-		}
+		int is_valid(){ return sockfd != -1; }
 
-		bool create();
+		int create();
 
 		/*Servidor: Forjar enlace a puerto*/
-		bool bind(int port);
+		int bind(int port);
 
 		/*Servidor: Escuchar conexiones entrantes*/
-		bool listen();
+		int listen();
 
 		/*Servidor: Aceptar conexión*/
-		bool accept(Socket&);
+		int accept(Socket&);
 
 		/*Cliente: Conecta al servicio del host en el puerto*/
-		bool connect(std::string host,int port);
+		int connect(std::string host,int port);
 
 		/*Envía una cadena de caracteres*/
 		int send(std::string str);
@@ -48,15 +45,15 @@ class Socket
 		int recv(std::string& buf);
 
 		/*Cerrar conexión*/
-		bool close();
+		int close();
 
 		int getPort();
 
 		std::string getHost();
 
-		int getFD();
-		
-		void setFD(int fd);
+		int getFD(){ return sockfd}
+
+		void setFD(int fd){}
 
 		/*Longitud del nombre del host*/
 		const int MAXHOSTNAME = 200;
