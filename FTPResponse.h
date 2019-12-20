@@ -52,9 +52,19 @@ class FTPResponse {
 			return message.substr(firstPos);
 		}
 
-		int returnCode();
+		string parseResponse(int &code)
+		{
+			string response = parseResponse();
+			code = atoi(status.c_str());
+			return response;
+		}
+
+		int returnCode()
+		{
+
+		}
 		
-		string parseResponse(int&);
+		
 		string formResponse();
 		int getPort();
 };
