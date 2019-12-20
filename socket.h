@@ -117,12 +117,27 @@ class Socket
 			{
 				return 0;
 			}
-			
+
 			return ::send(sockfd, str.c_str(), str.size(), 0);
 		}
 
 		/*Recibir una cadena de caracteres y retorna la longitud de la cadena*/
-		int recv(std::string& buf);
+		int recv(std::string& buf)
+		{
+			if(!is_valid())
+			{
+				return 0;
+			}
+			char buffer[MAXRECV+5];
+			int status = ::recv(sockfd, buffer, MAXRECV, 0);
+
+			if(status > 0)
+			{
+				buf.assign(buffer,status);
+			}
+
+			return status;
+		}
 
 		/*Cerrar conexión*/
 		int close();
