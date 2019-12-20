@@ -7,6 +7,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 class Socket
 {
@@ -115,7 +116,7 @@ class Socket
 		{
 			if(!is_valid())
 			{
-				return 0;
+				return -1;
 			}
 
 			return ::send(sockfd, str.c_str(), str.size(), 0);
@@ -126,7 +127,7 @@ class Socket
 		{
 			if(!is_valid())
 			{
-				return 0;
+				return -1;
 			}
 			char buffer[MAXRECV+5];
 			int status = ::recv(sockfd, buffer, MAXRECV, 0);
@@ -140,9 +141,22 @@ class Socket
 		}
 
 		/*Cerrar conexión*/
-		int close();
+		int close()
+		{
+			if(!is_valid())
+			{
+				return 1;
+			}
+			return ::close(sockfd) != -1;
+		}
 
-		int getPort();
+		int getPort()
+		{
+			struct sockaddr_in local_address;
+			socklen_t address_length = sizeof(local_address);
+			getsockname(sockfd, (struct sockaddr*)&local_address, &address_length);
+			return ntohs(local_address.sin_port);
+		}
 
 		std::string getHost();
 
