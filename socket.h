@@ -44,21 +44,37 @@ class Socket
 
 			if(!is_valid()) 
 			{
-				return 1;
+				return 0;
 			}
 
 			int accept = 1;
 	
-			if (setsockopt(_sockfd,SOL_SOCKET,SO_REUSEADDR,&accept,sizeof(int)) == -1)
+			if (setsockopt(sockfd,SOL_SOCKET,SO_REUSEADDR,&accept,sizeof(int)) == -1)
 			{
 				return 0;
 			}
-			
+
 			return 1;
 		}
 
 		/*Servidor: Forjar enlace a puerto*/
-		int bind(int port);
+		int bind(int port)
+		{
+			if(!is_valid())
+			{
+				return 0;
+			}
+
+			maddress.sin_family = AF_INET;
+			maddress.sin_port = htons(port);
+			memset(maddress.sin_zero, '\0', sizeof maddress.sin_zero);
+
+			if(::bind(sockfd, (struct sockaddr *)&maddress, sizeof(maddress)) == -1)
+			{
+				return 0;
+			}
+			return 1;
+		}
 
 		/*Servidor: Escuchar conexiones entrantes*/
 		int listen();
@@ -67,7 +83,10 @@ class Socket
 		int accept(Socket&);
 
 		/*Cliente: Conecta al servicio del host en el puerto*/
-		int connect(std::string host,int port);
+		int connect(std::string host,int port)
+		{
+			
+		}
 
 		/*Envía una cadena de caracteres*/
 		int send(std::string str);
@@ -82,7 +101,7 @@ class Socket
 
 		std::string getHost();
 
-		int getFD(){ return sockfd}
+		int getFD(){ return sockfd;}
 
 		void setFD(int fd){}
 
