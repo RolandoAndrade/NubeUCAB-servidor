@@ -174,7 +174,7 @@ class Socket
 		{
 			struct sockaddr_in local_address;
 			socklen_t address_length = sizeof(local_address);
-			getsockname(_sockfd, (struct sockaddr*)&local_address, &address_length);
+			getsockname(sockfd, (struct sockaddr*)&local_address, &address_length);
 			return std::string(inet_ntoa( local_address.sin_addr));
 		}
 

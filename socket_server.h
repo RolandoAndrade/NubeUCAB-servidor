@@ -30,8 +30,22 @@ class ServerSocket : private Socket
 			}
 		}
 
-		~ServerSocket();
-		ServerSocket& operator << (std::string&);
+		~ServerSocket()
+		{
+
+		}
+		/*Función para mandar datos desde el socket*/
+
+		ServerSocket& operator << (std::string& data)
+		{
+			if(Socket::send(data)==-1)
+			{
+				throw SocketException(strerror(errno));
+			}
+
+			return *this;
+		}
+
 		ServerSocket& operator >> ( std::string& );
 		void accept(ServerSocket&);
 		void close();
