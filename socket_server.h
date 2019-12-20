@@ -4,6 +4,7 @@
 class ServerSocket : private Socket
 {
 	public:
+
 		ServerSocket()
 		{
 			if(!Socket::create())
@@ -34,7 +35,8 @@ class ServerSocket : private Socket
 		{
 
 		}
-		/*Función para mandar datos desde el socket*/
+
+		/*Mandar datos desde el socket*/
 
 		ServerSocket& operator << (std::string& data)
 		{
@@ -46,6 +48,8 @@ class ServerSocket : private Socket
 			return *this;
 		}
 
+		/*Recibir datos desde el socket*/
+
 		ServerSocket& operator >> (std::string& data)
 		{
 			if(Socket::recv(data)==-1)
@@ -56,6 +60,8 @@ class ServerSocket : private Socket
 			return *this;
 		}
 
+		/*Aceptar conexión entrante*/
+
 		void accept(ServerSocket &ssocket)
 		{
 			if(!Socket::accept(ssocket))
@@ -63,6 +69,8 @@ class ServerSocket : private Socket
 				throw SocketException(strerror(errno));
 			}
 		}
+
+		/*Cerrar socket*/
 
 		void close()
 		{
@@ -72,7 +80,18 @@ class ServerSocket : private Socket
 			}
 		}
 
-		int fd();
-		int port();
-		std::string host();
+		int getFD()
+		{
+			return Socket::getFD();
+		}
+
+		int getPort()
+		{
+			return Socket::getPort();
+		}
+
+		std::string getHost()
+		{
+			return Socket::getHost();
+		}
 };
