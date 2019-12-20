@@ -18,13 +18,44 @@ class Socket
 		struct sockaddr_in maddress;
 
 	public:
-		Socket();
 
-		~Socket();
+		Socket()
+		{
+			memset(&maddress, 0, sizeof maddress);
+			sockfd = -1;
+		}
 
-		int is_valid(){ return sockfd != -1; }
+		~Socket()
+		{
+			if(is_valid())
+			{
+				close();
+			}
+		}
 
-		int create();
+		int is_valid()
+		{ 
+			return sockfd != -1; 
+		}
+
+		int create()
+		{
+			sockfd = socket(PF_INET, SOCK_STREAM, 0);
+
+			if(!is_valid()) 
+			{
+				return 1;
+			}
+
+			int accept = 1;
+	
+			if (setsockopt(_sockfd,SOL_SOCKET,SO_REUSEADDR,&accept,sizeof(int)) == -1)
+			{
+				return 0;
+			}
+			
+			return 1;
+		}
 
 		/*Servidor: Forjar enlace a puerto*/
 		int bind(int port);
