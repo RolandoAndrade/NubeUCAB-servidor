@@ -29,13 +29,22 @@ public:
 		argv = "";
 	}
 
-	FTPRequest(string c,string argv)
+	FTPRequest(string c,string a)
 	{
 		cmd = c;
-		argv = " "+argv;
+		argv = " "+a;
 	}
 
-	FTPRequest(string, vector<string>);
+	FTPRequest(string c, vector<string> flags)
+	{
+		cmd = c;
+		argv = "";
+		for(string f: flags)
+		{
+			argv += " " + f;
+		}
+	}
+
 	FTPRequest(string, vector<string>, vector<string>);
 	
 	void setRequest(string);
