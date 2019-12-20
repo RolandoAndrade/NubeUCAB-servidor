@@ -1,6 +1,8 @@
 #include "socket.h"
 #include "socket_exceptions.h"
 
+using namespace std;
+
 class ServerSocket : private Socket
 {
 	public:
@@ -38,7 +40,7 @@ class ServerSocket : private Socket
 
 		/*Mandar datos desde el socket*/
 
-		ServerSocket& operator << (std::string& data)
+		ServerSocket& operator << (string &data)
 		{
 			if(Socket::send(data)==-1)
 			{
@@ -50,7 +52,7 @@ class ServerSocket : private Socket
 
 		/*Recibir datos desde el socket*/
 
-		ServerSocket& operator >> (std::string& data)
+		ServerSocket& operator >> (string &data)
 		{
 			if(Socket::recv(data)==-1)
 			{
@@ -90,7 +92,7 @@ class ServerSocket : private Socket
 			return Socket::getPort();
 		}
 
-		std::string getHost()
+		string getHost()
 		{
 			return Socket::getHost();
 		}

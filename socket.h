@@ -9,6 +9,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+using namespace std;
+
 class Socket
 {
 	private:
@@ -109,7 +111,7 @@ class Socket
 		}
 
 		/*Cliente: Conecta al servicio del host en el puerto*/
-		int connect(std::string host,int port)
+		int connect(string host,int port)
 		{
 			if(!is_valid())
 			{
@@ -118,13 +120,13 @@ class Socket
 
 			maddress.sin_family = AF_INET;
 			maddress.sin_port = htons(port);
-			maddress.sin_addr.s_addr = std::stoi(host);
+			maddress.sin_addr.s_addr = stoi(host);
 
 			return ::connect(sockfd, (sockaddr *)&maddress, sizeof(maddress)) != -1;
 		}
 
 		/*Envía una cadena de caracteres*/
-		int send(std::string str)
+		int send(string str)
 		{
 			if(!is_valid())
 			{
@@ -135,7 +137,7 @@ class Socket
 		}
 
 		/*Recibir una cadena de caracteres y retorna la longitud de la cadena*/
-		int recv(std::string& buf)
+		int recv(string& buf)
 		{
 			if(!is_valid())
 			{
@@ -170,12 +172,12 @@ class Socket
 			return ntohs(local_address.sin_port);
 		}
 
-		std::string getHost()
+		string getHost()
 		{
 			struct sockaddr_in local_address;
 			socklen_t address_length = sizeof(local_address);
 			getsockname(sockfd, (struct sockaddr*)&local_address, &address_length);
-			return std::string(inet_ntoa( local_address.sin_addr));
+			return string(inet_ntoa( local_address.sin_addr));
 		}
 
 		int getFD()
