@@ -68,7 +68,14 @@ class Socket
 		}
 
 		/*Servidor: Escuchar conexiones entrantes*/
-		int listen();
+		int listen()
+		{
+			if (!is_valid())
+			{
+				return 0;
+			}
+			return ::listen(sockfd, BACKLOG) != -1;
+		}
 
 		/*Servidor: Aceptar conexión*/
 		int accept(Socket&);
