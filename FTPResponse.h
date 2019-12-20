@@ -28,13 +28,13 @@ class FTPResponse {
 			setResponse(response);
 		}
 
-		FTPResponse(string response,string code)
+		FTPResponse(string code,string response)
 		{
 			message = response;
 			status = code;
 		}
 		
-		void setResponse(string)
+		void setResponse(string response)
 		{
 			message = response;
 			status = "";
@@ -59,12 +59,21 @@ class FTPResponse {
 			return response;
 		}
 
+		string getResponse()
+		{
+			return status+" "+message+"\r\n";
+		}
+
 		int returnCode()
 		{
-
+			if(status == "")
+			{
+				parseResponse();
+			}
+			return atoi(status.c_str());
 		}
 		
 		
-		string formResponse();
+		
 		int getPort();
 };
