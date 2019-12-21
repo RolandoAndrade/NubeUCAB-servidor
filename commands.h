@@ -24,7 +24,38 @@
 
 using namespace std;
 
-int lookup(string);
+/*Revisar si el host existe*/
+
+int lookup(string s)
+{
+	const char *host = s.c_str();
+	struct sockaddr_in inaddr;
+	struct hostent *hostp;
+
+	if ((host == NULL) || (*host == '\0'))
+	{
+		return(INADDR_ANY);
+	}
+
+	memset ((char * ) &inaddr, 0, sizeof inaddr);
+
+	if ((int)(inaddr.sin_addr.s_addr = inet_addr(host)) == -1)
+	{
+		hostp = gethostbyname(host);
+		if (hostp == NULL)
+		{
+			throw SocketException(strerror(errno));
+		}
+		if (hostp->h_addrtype != AF_INET)
+		{ 
+			errno = EPROTOTYPE;
+			throw SocketException(strerror(errno));
+		}
+		memcpy((char * ) &inaddr.sin_addr, (char * ) hostp->h_addr, sizeof(inaddr.sin_addr));
+	}
+	return(inaddr.sin_addr.s_addr);
+}
+
 bool isNumber(string);
 string getPassword();
 string getFileName(string);
