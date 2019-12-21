@@ -196,6 +196,19 @@ string execute(string command, string directory, int &code)
 	return data.str();
 }
 
-vector<string> tokenize(string, string);
+vector<string> tokenize(string s, string sep)
+{
+	string::size_type lastPos = s.find_first_not_of(sep, 0);	
+	string::size_type pos = s.find_first_of(sep, lastPos); 
+	vector<std::string> tokens;
+	while(pos != string::npos || lastPos != string::npos)
+	{
+		tokens.push_back(s.substr(lastPos,(pos - lastPos)));
+		lastPos = s.find_first_not_of(sep, pos);	
+		pos = s.find_first_of(sep, lastPos); 
+	}
+	return tokens;
+}
+
 bool parseCommand(string, string&, string&);
 bool parseCommand(string, string&, vector<string>&, vector<string>&);
