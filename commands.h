@@ -84,7 +84,14 @@ string getPassword()
 	return pass;
 }
 
-string getFileName(string);
+/*Obtener nombre del archivo*/
+
+string getFileName(string s)
+{
+	string::size_type pos = str.find_last_of("/\\");
+	return str.substr(pos+1);
+}
+
 string getFilePath(string);
 string execute(string, string,int& code = 0);
 vector<string> tokenize(string, string);
