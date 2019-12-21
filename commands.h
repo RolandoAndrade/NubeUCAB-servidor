@@ -102,7 +102,34 @@ string getFilePath(string s)
 	return s.substr(0,pos);
 }
 
-string execute(string, string,int& code = 0);
+void pwd(stringstream &data, int &code)
+{
+	char buff[2048];
+	if (getcwd(buff, sizeof(buff)) != NULL)
+	{
+		code = 1;
+		data<<"\""<<buff<<"\""<<endl;
+	}
+	else 
+	{
+		data<<"\"Ha ocurrido un error: "<<strerror(errno)<<"\""<<endl;
+	}
+}
+
+string execute(string type, string command, int &code)
+{
+	FILE *in;
+	stringstream data;
+	code = 0;
+	
+	if(type == "pwd")
+	{
+		pwd(data, code);
+	}
+
+	return data.str();
+}
+
 vector<string> tokenize(string, string);
 bool parseCommand(string, string&, string&);
 bool parseCommand(string, string&, vector<string>&, vector<string>&);
