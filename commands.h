@@ -198,8 +198,8 @@ string execute(string command, string directory, int &code)
 
 vector<string> tokenize(string s, string sep)
 {
-	size_type lastPos = s.find_first_not_of(sep, 0);	
-	size_type pos = s.find_first_of(sep, lastPos); 
+	string::size_type lastPos = s.find_first_not_of(sep, 0);	
+	string::size_type pos = s.find_first_of(sep, lastPos); 
 	vector<string> tokens;
 	while(pos != string::npos || lastPos != string::npos)
 	{

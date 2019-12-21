@@ -83,13 +83,13 @@ class FTPRequest
 			else if(cmd == "PORT")
 			{
 				stringstream arg;
-				for(char c:argv)
+				for(int i = 0; i<argv.size();i++)
 				{
-					if(c=='.')
+					if(argv[i]=='.')
 					{
 						arg<<',';
 					}
-					if(c==':')
+					if(argv[i]==':')
 					{
 						arg<<',';
 						int port = atoi(argv.substr(i+1).c_str());
@@ -99,10 +99,10 @@ class FTPRequest
 					else
 					{
 						//arg<<_cmd[i];
-						arg<<c;
+						arg<<argv[i];
 					}
 				}
-				return cmd+" "+argv.str()+"\r\n";
+				return cmd+" "+arg.str()+"\r\n";
 			}
 			else
 			{
