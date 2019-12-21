@@ -68,7 +68,22 @@ int isANumber(string s)
 	return 1;
 }
 
-string getPassword();
+/*Obtener contraseña en consola linux*/
+string getPassword()
+{
+	termios oldt;
+	tcgetattr(STDIN_FILENO, &oldt);
+	termios newt = oldt;
+	newt.c_lflag &= ~ECHO;
+	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+	string pass;
+	getline(cin, pass);
+	getline(cin, pass);
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+	cout<<endl;
+	return pass;
+}
+
 string getFileName(string);
 string getFilePath(string);
 string execute(string, string,int& code = 0);
