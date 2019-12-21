@@ -142,29 +142,59 @@ void mkdirectory(stringstream &data, int &code, string directory)
 	}
 }
 
-string execute(string type, string command, int &code)
+void ls(FILE *in, int &code)
 {
-	FILE *in;
+	char *line;
+	size_t len = 0;
+	getline(&line, &len,in);
+	if(string(line).find("total")==string::npos)
+	{
+		code = 0;
+	}
+}
+
+string execute(string command, string directory, int &code)
+{
 	stringstream data;
 	code = 0;
 	
-	if(type == "pwd")
+	if(command == "pwd")
 	{
 		pwd(data, code);
 	}
-	else if(type == "cd")
+	else if(command == "cd")
 	{
-		cd(data, code, command);
+		cd(data, code, directory);
 	}
-	else if(type == "mkdir")
+	else if(command == "mkdir")
 	{
-		mkdirectory(data,code,command);
+		mkdirectory(data,code,directory);
+	}
+	else
+	{
+		FILE *in;
+		if(!(in = popen(directory.c_str(), "r")))
+		{
+			data<<"No se puede realizar la operación: "<<directory<<endl;
+		}
+		else
+		{
+			code = 1;
+			if(command=="ls")
+			{
+				ls(in,code);
+			}
+			char buff[2048];
+			while(fgets(buff,sizeof(buff), in)!=NULL)
+			{
+				data<<buff;
+			}
+			pclose(in);
+		}
 	}
 
 	return data.str();
 }
-
-
 
 vector<string> tokenize(string, string);
 bool parseCommand(string, string&, string&);
