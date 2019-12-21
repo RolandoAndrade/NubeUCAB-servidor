@@ -116,16 +116,29 @@ void pwd(stringstream &data, int &code)
 	}
 }
 
-void cd(stringstream &data, int &code, string command)
+void cd(stringstream &data, int &code, string directory)
 {
-	if(chdir(command.c_str()) == 0)
+	if(chdir(directory.c_str()) == 0)
 	{
 		code = 1;
-		data<<"Se ha cambiado de directorio: "<<command<<endl;
+		data<<"Se ha cambiado de directorio: "<<directory<<endl;
 	}
 	else
 	{
 		data<<"Ha ocurrido un error: "<<strerror(errno)<<endl;
+	}
+}
+
+void mkdirectory(stringstream &data, int &code, string directory)
+{
+	if(!mkdir(directory.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH))
+	{
+		code = 1;
+		data<<"Creado directorio: \""<<directory<<"\""<<endl;
+	}
+	else
+	{
+		data<<"Error: "<<strerror(errno)<<endl;
 	}
 }
 
@@ -139,10 +152,13 @@ string execute(string type, string command, int &code)
 	{
 		pwd(data, code);
 	}
-
 	else if(type == "cd")
 	{
 		cd(data, code, command);
+	}
+	else if(type == "mkdir")
+	{
+		mkdirectory(data,code,command);
 	}
 
 	return data.str();
