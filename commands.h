@@ -198,9 +198,9 @@ string execute(string command, string directory, int &code)
 
 vector<string> tokenize(string s, string sep)
 {
-	string::size_type lastPos = s.find_first_not_of(sep, 0);	
-	string::size_type pos = s.find_first_of(sep, lastPos); 
-	vector<std::string> tokens;
+	size_type lastPos = s.find_first_not_of(sep, 0);	
+	size_type pos = s.find_first_of(sep, lastPos); 
+	vector<string> tokens;
 	while(pos != string::npos || lastPos != string::npos)
 	{
 		tokens.push_back(s.substr(lastPos,(pos - lastPos)));
@@ -210,5 +210,80 @@ vector<string> tokenize(string s, string sep)
 	return tokens;
 }
 
-bool parseCommand(string, string&, string&);
-bool parseCommand(string, string&, vector<string>&, vector<string>&);
+string replaceAllOccurences(string s, string search, string replace) 
+{
+	string::size_type pos = 0;
+	while ((pos = s.find(search, pos)) != string::npos) 
+	{
+		s.replace(pos, search.length(), replace);
+		pos += replace.length();
+	}
+	return s;
+}
+
+int parseCommand(string command,string& cmd,vector<string>& flags, vector<string>& args)
+{
+	string::size_type beginPos = command.find_first_not_of(" \r\n", 0);
+	string::size_type endPos = command.find_first_of(" \r\n",beginPos);
+	cmd = command.substr(beginPos,endPos-beginPos);
+	beginPos = endPos ;
+	while(beginPos < command.length())	
+	{
+		beginPos = command.find_first_not_of(" \r\n",endPos) ;
+		if(beginPos != string::npos)
+		{
+			if(command[beginPos]=='\"')	
+			{
+				endPos = command.find_first_of('\"',beginPos+1) ;
+				if(endPos == string::npos)	
+				{
+					cout << "Error : Missing \" at the end." << command.substr(beginPos) << endl ;
+					return 0;
+				}
+				args.push_back(command.substr(beginPos+1,endPos-beginPos-1)) ;
+				endPos = endPos + 1 ;
+			}
+			else if(command[beginPos]=='-')
+			{
+				endPos = command.find_first_of(" \r\n",beginPos) ;
+				if(endPos == string::npos)
+				{
+					endPos = command.length() ;
+				}
+				flags.push_back(command.substr(beginPos,endPos-beginPos)) ;
+			}
+			else
+			{
+				endPos = command.find_first_of(" \r\n",beginPos) ;
+				while(command[endPos-1] == '\\' && string::npos != endPos)	
+				{
+					endPos = command.find_first_of(" \r\n",endPos+1) ;
+				}
+				if(endPos == string::npos)	
+				{
+					endPos = command.length() ;						
+				}
+				args.push_back(command.substr(beginPos,endPos-beginPos)) ;
+			}
+		}
+	}				
+	return 1;
+}
+
+int parseCommand(string command,string& cmd, string& args)
+{
+	string::size_type beginPos = command.find_first_not_of(" \r\n", 0);
+	string::size_type endPos = command.find_first_of(" \r\n",beginPos);
+	cmd = command.substr(beginPos,endPos-beginPos);
+	beginPos = command.find_first_not_of(" \r\n",endPos);
+	if(beginPos!=string::npos)
+	{
+		endPos = command.find_first_of("\r\n",beginPos);
+		if(endPos==string::npos)
+		{
+			return 0;
+		}
+		args = command.substr(beginPos,endPos-beginPos);	
+	}
+	return 1;
+}
