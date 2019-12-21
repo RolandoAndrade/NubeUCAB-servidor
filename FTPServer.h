@@ -36,8 +36,46 @@ class FTPServer
 		{
 
 		}
+
+		void start()
+		{
+			cout<<"Iniciando servidor en el puerto: "<<port<<endl;
+
+			try
+			{
+				//Crea un socket a la escucha de los clientes
+				ServerSocket server(port);
+				ServerSocket *serverSocket = new ServerSocket();
+				//Espera peticiones
+				while(1)
+				{
+					try
+					{
+						server.accept(*serverSocket);
+						//Se debería crear un proceso hijo, de lo contrario cierra el socket
+						if(!fork())
+						{
+							server.close();
+							communicate(serverSocket);
+							(*serverSocket).close();
+							exit(0);
+						}
+						(*serverSocket).close();
+					} 
+					catch(SocketException &e)
+					{
+						cout<<"Ha ocurrido un error: "<<e.getMessage()<<endl;
+						continue;
+					}
+				}
+			} 
+			catch(SocketException &e)
+			{
+				std::cout<<"Ha ocurrido un error: "<<e.getMessage()<<endl;
+				return;
+			}
+		}
 		
-		void start();
 		void help();
 		void get(string);
 		void put(string);
