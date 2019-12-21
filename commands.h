@@ -116,6 +116,19 @@ void pwd(stringstream &data, int &code)
 	}
 }
 
+void cd(stringstream &data, int &code, string command)
+{
+	if(chdir(command.c_str()) == 0)
+	{
+		code = 1;
+		data<<"Se ha cambiado de directorio: "<<command<<endl;
+	}
+	else
+	{
+		data<<"Ha ocurrido un error: "<<strerror(errno)<<endl;
+	}
+}
+
 string execute(string type, string command, int &code)
 {
 	FILE *in;
@@ -127,8 +140,15 @@ string execute(string type, string command, int &code)
 		pwd(data, code);
 	}
 
+	else if(type == "cd")
+	{
+		cd(data, code, command);
+	}
+
 	return data.str();
 }
+
+
 
 vector<string> tokenize(string, string);
 bool parseCommand(string, string&, string&);
