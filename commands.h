@@ -56,7 +56,18 @@ int lookup(string s)
 	return(inaddr.sin_addr.s_addr);
 }
 
-bool isNumber(string);
+int isANumber(string s)
+{
+	for(char c: s)
+	{
+		if(!isdigit(c))
+		{
+			return 0;
+		}
+	}
+	return 1;
+}
+
 string getPassword();
 string getFileName(string);
 string getFilePath(string);
