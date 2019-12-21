@@ -88,11 +88,20 @@ string getPassword()
 
 string getFileName(string s)
 {
-	string::size_type pos = str.find_last_of("/\\");
-	return str.substr(pos+1);
+	string::size_type pos = s.find_last_of("/\\");
+	return s.substr(pos+1);
 }
 
-string getFilePath(string);
+string getFilePath(string s)
+{
+	string::size_type pos = s.find_last_of("/\\");
+	if(pos==string::npos)
+	{
+		return "";
+	}
+	return s.substr(0,pos);
+}
+
 string execute(string, string,int& code = 0);
 vector<string> tokenize(string, string);
 bool parseCommand(string, string&, string&);
