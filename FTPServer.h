@@ -71,62 +71,6 @@ class FTPServer
 			return responseMsg;
 		}
 
-
-	public:
-		FTPServer(int pport)
-		{
-			cout<<"NubeUCAB-servidor ha iniciado"<<endl;
-			port = pport;
-		}
-		~FTPServer()
-		{
-
-		}
-
-		void start()
-		{
-			cout<<"Iniciando servidor en el puerto: "<<port<<endl;
-
-			try
-			{
-				//Crea un socket a la escucha de los clientes
-				ServerSocket server(port);
-				ServerSocket *serverSocket = new ServerSocket();
-				//Espera peticiones
-				while(1)
-				{
-					try
-					{
-						server.accept(*serverSocket);
-						//Se debería crear un proceso hijo, de lo contrario cierra el socket
-						if(!fork())
-						{
-							server.close();
-							communicate(serverSocket);
-							(*serverSocket).close();
-							exit(0);
-						}
-						(*serverSocket).close();
-					} 
-					catch(SocketException &e)
-					{
-						cout<<"Ha ocurrido un error: "<<e.getMessage()<<endl;
-						continue;
-					}
-				}
-			} 
-			catch(SocketException &e)
-			{
-				cout<<"Ha ocurrido un error: "<<e.getMessage()<<endl;
-				return;
-			}
-		}
-
-		void help()
-		{
-			
-		}
-
 		/*Listar archivos del directorio*/
 
 		int ls(string args, string &response, int print = 0)
@@ -200,6 +144,62 @@ class FTPServer
 			return code;
 		}
 
+
+	public:
+		FTPServer(int pport)
+		{
+			cout<<"NubeUCAB-servidor ha iniciado"<<endl;
+			port = pport;
+		}
+		~FTPServer()
+		{
+
+		}
+
+		void start()
+		{
+			cout<<"Iniciando servidor en el puerto: "<<port<<endl;
+
+			try
+			{
+				//Crea un socket a la escucha de los clientes
+				ServerSocket server(port);
+				ServerSocket *serverSocket = new ServerSocket();
+				//Espera peticiones
+				while(1)
+				{
+					try
+					{
+						server.accept(*serverSocket);
+						//Se debería crear un proceso hijo, de lo contrario cierra el socket
+						if(!fork())
+						{
+							server.close();
+							communicate(serverSocket);
+							(*serverSocket).close();
+							exit(0);
+						}
+						(*serverSocket).close();
+					} 
+					catch(SocketException &e)
+					{
+						cout<<"Ha ocurrido un error: "<<e.getMessage()<<endl;
+						continue;
+					}
+				}
+			} 
+			catch(SocketException &e)
+			{
+				cout<<"Ha ocurrido un error: "<<e.getMessage()<<endl;
+				return;
+			}
+		}
+
+		void help()
+		{
+			
+		}
+
 		LoginInfo formLoginInfoList()
 		{
 			LoginInfo list;
@@ -257,6 +257,19 @@ class FTPServer
 						else if(cmd=="PWD"  && !args.size() && isLogged)
 						{
 							responseMsg = FTPResponse("257","\""+pwd()+"\"").getResponse();
+							*serverSocket << responseMsg;
+						}
+						else if(cmd=="MKD" && args.size() && isLogged)
+						{
+							string response;
+							if(mkd(args,response))
+							{
+								responseMsg = FTPResponse("257",response).getResponse();
+							}
+							else
+							{
+								responseMsg = FTPResponse("550",response).getResponse();
+							}
 							*serverSocket << responseMsg;
 						}
 
