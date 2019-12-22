@@ -71,16 +71,24 @@ class FTPServer
 			} 
 			catch(SocketException &e)
 			{
-				std::cout<<"Ha ocurrido un error: "<<e.getMessage()<<endl;
+				cout<<"Ha ocurrido un error: "<<e.getMessage()<<endl;
 				return;
 			}
 		}
-		
-		void help();
-		void get(string);
-		void put(string);
-		void add();
-		int ls(string, string&, bool print = false);
+
+		void help()
+		{
+			
+		}
+
+		int ls(string args, string &response, bool print = false)
+		{
+			int code;
+			string request = FTPRequest("ls -l",args).getRequest("\n");
+			
+
+		}
+
 		string syst(bool print = false);
 		string pwd(bool print = false);
 		int cd(string, bool print = false);

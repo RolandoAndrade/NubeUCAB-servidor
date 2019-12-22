@@ -74,11 +74,11 @@ class FTPRequest
 			}
 		}
 
-		string getRequest()
+		string getRequest(string terminator = "\r\n")
 		{
 			if(argv == "")	
 			{
-				return cmd + "\r\n";
+				return cmd + terminator;
 			}
 			else if(cmd == "PORT")
 			{
@@ -102,11 +102,11 @@ class FTPRequest
 						arg<<argv[i];
 					}
 				}
-				return cmd+" "+arg.str()+"\r\n";
+				return cmd+" "+arg.str()+terminator;
 			}
 			else
 			{
-				return cmd + argv +"\r\n";
+				return cmd + argv +terminator;
 			}
 		}
 };
