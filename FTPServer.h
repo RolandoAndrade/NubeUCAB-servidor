@@ -154,13 +154,22 @@ class FTPServer
 			return code;
 		}
 
-
-		int quit()
+		LoginInfo formLoginInfoList()
 		{
-			return 0;
+			LoginInfo list;
+			ifstream in("users/users.info", ios::in| ios::binary);
+
+			if(in)
+			{
+				string user, pass, home;
+				while (in >> user >> pass >> home)
+				{
+				    list[user] = make_pair(pass,home);
+				}
+			}
+			
+			return list;
 		}
 
-		int setRootDir(string, bool print = false);
-		LoginInfo formLoginInfoList();
 		void communicate(ServerSocket *);
 };
