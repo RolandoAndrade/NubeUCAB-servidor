@@ -144,6 +144,52 @@ class FTPServer
 			return code;
 		}
 
+		string listDir(ServerSocket dataSocket, string args)
+		{
+			string out = "", data;
+			// Conección vía socket con el cliente
+			if(dataSocket.getFD() != -1 )
+			{
+				string response;
+				if(ls(args,response))
+				{
+					out = FTPResponse("150","Lista de directorios").getResponse();
+					// Enviar lista al cliente
+					try
+					{
+						int pos = 0,len=response.size();
+						string buffer;
+						ServerSocket ax;
+						dataSocket.accept(ax);
+						while(pos<len)
+						{
+							data = response.substr(pos,min(2048,len-pos));
+							ax << data;
+							pos = pos + min(2048,len-pos);
+						}
+						out += FTPResponse("226", "Directorio enviado").getResponse();
+						
+					} 
+					catch(SocketException &e)
+					{
+						cout<<"Error: "<<e.getMessage()<<endl;
+						out += FTPResponse("450", "Directorio no enviado").getResponse();
+					}
+				}
+				else
+				{
+					out += FTPResponse("501","Error en los parámetros").getResponse();
+				}
+
+				dataSocket.close();
+			}
+			else 
+			{
+				out += FTPResponse("425","Use PASV first.").getResponse();
+			}
+			return out;
+		}
+
 
 	public:
 		FTPServer(int pport)
@@ -269,6 +315,22 @@ class FTPServer
 							else
 							{
 								responseMsg = FTPResponse("550",response).getResponse();
+							}
+							*serverSocket << responseMsg;
+						}
+						else if(cmd=="LIST" && isLogged)
+						{
+							responseMsg = listDir(*dataSocket,args);
+							*serverSocket << responseMsg;
+						}
+						else if(cmd=="CWD" && args.size() && isLogged)
+						{
+							if(cd(args))
+							{
+								responseMsg = FTPResponse("250","Cambiado directorio").getResponse();
+							}
+							else{
+								responseMsg = FTPResponse("550","No se ha podido acceder al directorio").getResponse();
 							}
 							*serverSocket << responseMsg;
 						}
