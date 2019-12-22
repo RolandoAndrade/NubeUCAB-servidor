@@ -26,6 +26,32 @@ class FTPServer
 {
 	private:
 		int port;
+
+		int hello(ServerSocket **serverSocket, string &responseMsg)
+		{
+			try
+			{
+				ServerSocket *ax;
+				responseMsg = FTPResponse("200","(NubeUCAB)").getResponse();
+				(*ax) << responseMsg;
+				*serverSocket = ax;
+				return 1;
+			} 
+			catch(SocketException &e)
+			{
+				std::cout<<"Ha ocurrido un error: "<<e.getMessage()<<std::endl;
+				return 0; 
+			}
+		}
+
+		string getUser(LoginInfo &info, string &user, string args)
+		{
+			info = formLoginInfoList();
+			user = args;
+			return FTPResponse("331","Introduce la contraseña").getResponse();
+		}
+
+
 	public:
 		FTPServer(int pport)
 		{
@@ -171,5 +197,41 @@ class FTPServer
 			return list;
 		}
 
-		void communicate(ServerSocket *);
+		void communicate(ServerSocket * serverSocket)
+		{
+			string data="",responseMsg="",cmd,args,user,pass;
+			ServerSocket *dataSocket;
+			LoginInfo list;
+			int isLogged = 0;
+			int isBinaryMode = 0;
+			// El servidor saluda
+			if(!hello(&(serverSocket),responseMsg)) return;
+			// a la escucha
+			while(1)
+			{
+				args.clear();
+				cmd.clear();
+				try
+				{
+					//Recibir datos del cliente
+					*serverSocket >> data;
+					if(parseCommand(data,cmd,args))
+					{
+						cout<<"Comando recibido: "<<cmd<<std::endl;
+						// Obtener usuario
+						if(cmd=="USER"&&args.size())
+						{
+							responseMsg = getUser(list, user,args);
+							*serverSocket << responseMsg;
+						}
+
+					}
+				} 
+				catch(SocketException &e)
+				{
+					std::cout<<"Ha ocurrido un error : "<<e.getMessage()<<std::endl;
+					return ;
+				}
+			}
+		}
 };
