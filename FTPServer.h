@@ -60,13 +60,13 @@ class FTPServer
 				{
 					cd(info[user].second);
 					isLogged = 1;
-					responseMsg = FTPResponse("230","Login successful.").formResponse();
+					responseMsg = FTPResponse("230","Login successful.").getResponse();
 				}
 			}
 
 			if(!isLogged)
 			{
-				responseMsg = FTPResponse("530","Login incorrect.").formResponse();
+				responseMsg = FTPResponse("530","Login incorrect.").getResponse();
 			}
 			return responseMsg;
 		}
@@ -246,9 +246,15 @@ class FTPServer
 						}
 						else if(cmd=="PASS" && args.length())
 						{
-							responseMsg = getUser(list, user,args, isLogged);
+							responseMsg = getPassword(list, user,args, isLogged);
 							*serverSocket << responseMsg;
 						}
+						else if(cmd=="SYST" && !args.size())
+						{
+							responseMsg = FTPResponse("215",uname()).getResponse();
+							*serverSocket << responseMsg;
+						}
+						
 
 
 					}
