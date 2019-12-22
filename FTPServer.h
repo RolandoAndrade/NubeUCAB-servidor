@@ -99,8 +99,9 @@ class FTPServer
 
 		string uname(int print = 0)
 		{
+			int code;
 			string request = FTPRequest("uname").getRequest("\n");
-			string response = execute("uname",request);
+			string response = execute("uname",request,code);
 
 			if(print)
 			{
@@ -109,8 +110,21 @@ class FTPServer
 
 			return response;
 		}
-		
-		string pwd(bool print = false);
+
+		string pwd(bool print = false)
+		{
+			int code;
+			string request = FTPRequest("pwd","").getRequest("\n");
+			string response = execute("pwd",request, code);
+
+			if(print)
+			{
+				cout<<response;
+			}
+
+			return response;
+
+		}
 		int cd(string, bool print = false);
 		int mkd(string, string&, bool print= false);
 		int pasv();
