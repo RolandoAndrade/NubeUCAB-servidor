@@ -353,9 +353,25 @@ class FTPServer
 
 							*serverSocket << responseMsg;
 						}
+						else if(cmd=="PASV" && !args.size() && isLogged)
+						{
+							try
+							{
+								dataSocket =  new ServerSocket(0);
+								string host =  (*serverSocket).getHost();
+								replace(host.begin(), host.end(), '.', ',');
+								stringstream port;
+								port << (*dataSocket).getPort()/256 <<"," << (*dataSocket).getPort()%256;
+								responseMsg = FTPResponse("227","Entrando en modo pasivo ("+host+","+port.str()+").").getResponse();
+							}
+							catch(SocketException &e)
+							{
+								cout<<"Ha ocurrido un error: "<<e.getMessage()<<endl;
+								responseMsg = FTPResponse("425","No se puede establecer conexión").getResponse();
+							}
 
-
-
+							*serverSocket << responseMsg;
+						}
 					}
 				} 
 				catch(SocketException &e)
