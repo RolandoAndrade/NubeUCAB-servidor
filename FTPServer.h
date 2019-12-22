@@ -254,7 +254,12 @@ class FTPServer
 							responseMsg = FTPResponse("215",uname()).getResponse();
 							*serverSocket << responseMsg;
 						}
-						
+						else if(cmd=="PWD"  && !args.size() && isLogged)
+						{
+							responseMsg = FTPResponse("257","\""+pwd()+"\"").getResponse();
+							*serverSocket << responseMsg;
+						}
+
 
 
 					}
