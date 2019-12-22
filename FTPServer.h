@@ -185,7 +185,7 @@ class FTPServer
 			}
 			else 
 			{
-				out += FTPResponse("425","Use PASV first.").getResponse();
+				out += FTPResponse("425","El servidor debe estar en PASV").getResponse();
 			}
 			return out;
 		}
@@ -332,6 +332,25 @@ class FTPServer
 							else{
 								responseMsg = FTPResponse("550","No se ha podido acceder al directorio").getResponse();
 							}
+							*serverSocket << responseMsg;
+						}
+						else if(cmd=="TYPE"  && args.size() && isLogged)
+						{
+							if(args == "B")
+							{
+								isBinaryMode = 1;
+								responseMsg = FTPResponse("200","Cambiado a modo binario").getResponse();
+							}
+							else if (args == "A")
+							{
+								isBinaryMode = 0;
+								responseMsg = FTPResponse("200","Cambiado a modo ASCII").getResponse();
+							}
+							else
+							{
+								responseMsg = FTPResponse("400","No es un tipo correcto").getResponse();
+							}
+
 							*serverSocket << responseMsg;
 						}
 
