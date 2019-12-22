@@ -51,6 +51,26 @@ class FTPServer
 			return FTPResponse("331","Introduce la contraseña").getResponse();
 		}
 
+		string getPassword(LoginInfo info, string user, string pass, int &isLogged)
+		{
+			string responseMsg;
+			if(info.find(user) != info.end())
+			{
+				if(info[user].first == pass)
+				{
+					cd(info[user].second);
+					isLogged = 1;
+					responseMsg = FTPResponse("230","Login successful.").formResponse();
+				}
+			}
+
+			if(!isLogged)
+			{
+				responseMsg = FTPResponse("530","Login incorrect.").formResponse();
+			}
+			return responseMsg;
+		}
+
 
 	public:
 		FTPServer(int pport)
@@ -199,7 +219,7 @@ class FTPServer
 
 		void communicate(ServerSocket * serverSocket)
 		{
-			string data="",responseMsg="",cmd,args,user,pass;
+			string data="",responseMsg="",cmd,args,user;
 			ServerSocket *dataSocket;
 			LoginInfo list;
 			int isLogged = 0;
@@ -224,6 +244,12 @@ class FTPServer
 							responseMsg = getUser(list, user,args);
 							*serverSocket << responseMsg;
 						}
+						else if(cmd=="PASS" && args.length())
+						{
+							responseMsg = getUser(list, user,args, isLogged);
+							*serverSocket << responseMsg;
+						}
+
 
 					}
 				} 
