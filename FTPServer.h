@@ -190,6 +190,24 @@ class FTPServer
 			return out;
 		}
 
+		
+		LoginInfo formLoginInfoList()
+		{
+			LoginInfo list;
+			ifstream in("users/users.info", ios::in| ios::binary);
+
+			if(in)
+			{
+				string user, pass, home;
+				while (in >> user >> pass >> home)
+				{
+				    list[user] = make_pair(pass,home);
+				}
+			}
+			
+			return list;
+		}
+
 
 	public:
 		FTPServer(int pport)
@@ -244,23 +262,6 @@ class FTPServer
 		void help()
 		{
 			
-		}
-
-		LoginInfo formLoginInfoList()
-		{
-			LoginInfo list;
-			ifstream in("users/users.info", ios::in| ios::binary);
-
-			if(in)
-			{
-				string user, pass, home;
-				while (in >> user >> pass >> home)
-				{
-				    list[user] = make_pair(pass,home);
-				}
-			}
-			
-			return list;
 		}
 
 		void communicate(ServerSocket * serverSocket)
