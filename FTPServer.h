@@ -204,7 +204,7 @@ class FTPServer
 
 		void start()
 		{
-			cout<<"Iniciando servidor en el puerto: "<<port<<endl;
+			cout<<"El servidor está corriendo en el puerto: "<<port<<endl;
 
 			try
 			{
@@ -482,7 +482,6 @@ class FTPServer
 
 							*serverSocket << responseMsg;
 						}
-						// get quit command for stop server system.
 						else if(cmd=="QUIT"  && !args.size())
 						{
 							try
