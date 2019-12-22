@@ -111,7 +111,9 @@ class FTPServer
 			return response;
 		}
 
-		string pwd(bool print = false)
+		/*Directorio actual*/
+
+		string pwd(int print = 0)
 		{
 			int code;
 			string request = FTPRequest("pwd","").getRequest("\n");
@@ -123,9 +125,22 @@ class FTPServer
 			}
 
 			return response;
-
 		}
-		int cd(string, bool print = false);
+
+		/*Entrar en directorio*/
+
+		int cd(string args, int print = 0)
+		{
+			int code;
+			string response = execute("cd",args,code);
+
+			if(print)
+			{
+				cout<<response;
+			}
+			return code;
+		}
+
 		int mkd(string, string&, bool print= false);
 		int pasv();
 		bool quit();
