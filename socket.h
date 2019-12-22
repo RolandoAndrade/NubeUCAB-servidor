@@ -23,16 +23,16 @@ class Socket
 	public:
 
 		/*Longitud del nombre del host*/
-		const int MAXHOSTNAME = 200;
+		static const int MAXHOSTNAME = 200;
 
 		/*Puerto de datos*/
-		const int BACKLOG = 20;
+		static const int BACKLOG = 20;
 
 		/*Número de conexiones permitidas*/
-		const int MAXCONNECTIONS = 10;
+		static const int MAXCONNECTIONS = 10;
 
 		/*Longitud máxima de datos que se puede recibir*/
-		const int MAXRECV = 2048;
+		static const int MAXRECV = 2048;
 
 		Socket()
 		{

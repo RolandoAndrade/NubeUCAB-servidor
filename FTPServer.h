@@ -372,11 +372,152 @@ class FTPServer
 
 							*serverSocket << responseMsg;
 						}
+						else if(cmd=="STOR" && args.size() && isLogged)
+						{
+							
+							if(isBinaryMode)
+							{
+								if((*dataSocket).getFD() != -1 )
+								{
+									ofstream out(args.c_str(), ios::out|ios::binary);
+									
+									if(out)
+									{
+										string buff;
+										ServerSocket ax;
+										responseMsg = FTPResponse("150", "Ok").getResponse();
+										*serverSocket<<responseMsg;
+										(*dataSocket).accept(ax);
+
+										while(1)
+										{
+											try
+											{
+												buff = "";
+												ax >> buff;
+												if(buff.length()==0)
+												{
+													break;
+												}
+											}
+											catch (SocketException &e)
+											{
+												cout<<"Error : "<<e.getMessage()<<endl;
+												break;
+											}
+											out << buff;																					
+										}
+									
+										out.close();
+										ax.close();
+										(*dataSocket).close();
+										responseMsg = FTPResponse("226", "Transferencia completa").getResponse();
+									}
+									else
+									{
+										responseMsg = FTPResponse("550","No se pudo realizar la transferencia").getResponse();
+									}
+								}
+								else 
+								{
+									responseMsg = FTPResponse("425","Debe estar en modo PASV").getResponse();
+								}
+
+							}
+							else
+							{
+								responseMsg = FTPResponse("550","Cambia a modo binario primero").getResponse();
+							}
+
+							*serverSocket << responseMsg;
+						}
+						else if(cmd=="RETR" && args.size() && isLogged)
+						{
+							string data;
+							ServerSocket temp_socket;
+							stringstream res_stream;
+
+							if(isBinaryMode){
+								if((*dataSocket).getFD() != -1 )
+								{
+									ifstream in(args.c_str(), ios::in| ios::binary| ios::ate);
+
+									if(in)
+									{
+										long length = in.tellg();
+										in.seekg (0, in.beg);
+										res_stream << "Conexión de datos binaria "<<args[0]<<" ("<<length<<" bytes).";
+										responseMsg = FTPResponse("150",res_stream.str()).getResponse();
+										*serverSocket<<responseMsg;
+										(*dataSocket).accept(temp_socket);
+										while (length>0)
+										{
+											int read_sz = Socket::MAXRECV<length ? Socket::MAXRECV : length;
+											char buf[Socket::MAXRECV+1];
+											in.read(buf,read_sz);
+											data.assign(buf,read_sz);
+											temp_socket<<data;
+											length -= read_sz;
+										}
+										in.close();
+										temp_socket.close();
+										(*dataSocket).close();
+										responseMsg = FTPResponse("226", "Transferencia completa").getResponse();
+									}
+									else
+									{
+										responseMsg = FTPResponse("550","No se puede recibir el archivo").getResponse();
+									}
+								}
+								else 
+								{
+									responseMsg = FTPResponse("425","Debe estar en modo PASV").getResponse();
+								}
+
+							}
+							else
+							{
+								responseMsg = FTPResponse("550","Cambie a modo binario").getResponse();
+							}
+
+							*serverSocket << responseMsg;
+						}
+						// get quit command for stop server system.
+						else if(cmd=="QUIT"  && !args.size())
+						{
+							try
+							{
+								responseMsg = FTPResponse("221","Goodbye.").getResponse();
+								*serverSocket << responseMsg;
+								return ;
+							}
+							catch(SocketException &e)
+							{
+								cout<<"Error: "<<e.getMessage()<<endl;
+								responseMsg = FTPResponse("500","No se pudo cerrar la conexión").getResponse();
+								*serverSocket << responseMsg;
+							}
+						}
+						else if(!isLogged)
+						{
+							responseMsg = FTPResponse("332","Necesitas iniciar sesión").getResponse();
+							*serverSocket << responseMsg;
+						} 
+						else
+						{
+							responseMsg = FTPResponse("500","Comando desconocido").getResponse();
+							*serverSocket << responseMsg;
+						}
+					}
+					else
+					{
+						responseMsg = FTPResponse("500","Comando desconocido").getResponse();
+						*serverSocket << responseMsg;
 					}
 				} 
 				catch(SocketException &e)
 				{
-					std::cout<<"Ha ocurrido un error : "<<e.getMessage()<<std::endl;
+					cout<<"Ha ocurrido un error : "<<e.getMessage()<<endl;
 					return ;
 				}
 			}
