@@ -141,9 +141,25 @@ class FTPServer
 			return code;
 		}
 
-		int mkd(string, string&, bool print= false);
-		int pasv();
-		bool quit();
+		int mkd(string args, string &response, int print = 0)
+		{
+			int code;
+			response = execute("mkdir",args,code);
+
+			if(print)
+			{
+				cout<<response;
+			}
+
+			return code;
+		}
+
+
+		int quit()
+		{
+			return 0;
+		}
+
 		int setRootDir(string, bool print = false);
 		LoginInfo formLoginInfoList();
 		void communicate(ServerSocket *);
