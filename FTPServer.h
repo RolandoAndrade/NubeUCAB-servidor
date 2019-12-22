@@ -81,15 +81,35 @@ class FTPServer
 			
 		}
 
-		int ls(string args, string &response, bool print = false)
+		/*Listar archivos del directorio*/
+
+		int ls(string args, string &response, int print = 0)
 		{
 			int code;
 			string request = FTPRequest("ls -l",args).getRequest("\n");
-			
-
+			response = execute("ls",request,code);
+			if(print)
+			{
+				cout<<response;
+			}
+			return code;
 		}
 
-		string syst(bool print = false);
+		/*Información del sistema*/
+
+		string uname(int print = 0)
+		{
+			string request = FTPRequest("uname").getRequest("\n");
+			string response = execute("uname",request);
+
+			if(print)
+			{
+				cout<<response;
+			}
+
+			return response;
+		}
+		
 		string pwd(bool print = false);
 		int cd(string, bool print = false);
 		int mkd(string, string&, bool print= false);
