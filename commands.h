@@ -26,9 +26,9 @@ using namespace std;
 
 /*Revisar si el host existe*/
 
-int lookup(string s)
+int lookup(string h)
 {
-	const char *host = s.c_str();
+	const char *host = h.c_str();
 	struct sockaddr_in inaddr;
 	struct hostent *hostp;
 

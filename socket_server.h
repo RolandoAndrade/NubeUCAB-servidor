@@ -46,7 +46,6 @@ class ServerSocket : private Socket
 			{
 				throw SocketException(strerror(errno));
 			}
-
 			return *this;
 		}
 
