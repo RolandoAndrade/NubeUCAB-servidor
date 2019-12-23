@@ -127,7 +127,7 @@ class FTPServer
 			return code;
 		}
 
-		string listDir(ServerSocket dataSocket, string args)
+		string listDir(ServerSocket &dataSocket, string args)
 		{
 			string out = "", data;
 			// Conección vía socket con el cliente
@@ -217,13 +217,14 @@ class FTPServer
 				{
 					try
 					{
+						cout<<"Entro"<<endl;
 						server.accept(*serverSocket);
 						//Se debería crear un proceso hijo, de lo contrario cierra el socket
 						if(!fork())
 						{
 							server.close();
-							cout<<"FT: "<<(*serverSocket).getFD();
 							communicate(serverSocket);
+							cout<<"Salgo"<<endl;
 							(*serverSocket).close();
 							exit(0);
 						}
@@ -263,7 +264,7 @@ class FTPServer
 			} 
 			catch(SocketException &e)
 			{
-				std::cout<<"Exception occurred : "<<e.getMessage()<<std::endl;
+				std::cout<<"Hubo un erro: "<<e.getMessage()<<std::endl;
 				return ; 
 			}
 			// a la escucha
