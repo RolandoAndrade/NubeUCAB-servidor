@@ -43,13 +43,13 @@ class FTPServer
 				{
 					cd(info[user].second);
 					isLogged = 1;
-					responseMsg = FTPResponse("230","Login successful.").getResponse();
+					responseMsg = FTPResponse("230","Ha ingresado exitosamente.").getResponse();
 				}
 			}
 
 			if(!isLogged)
 			{
-				responseMsg = FTPResponse("530","Login incorrect.").getResponse();
+				responseMsg = FTPResponse("530","No se ha podido iniciar sesión").getResponse();
 			}
 			return responseMsg;
 		}
