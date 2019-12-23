@@ -127,7 +127,7 @@ class FTPServer
 			return code;
 		}
 
-		string listDir(ServerSocket &dataSocket, string args)
+		string listDir(ServerSocket &dataSocket, string args, ServerSocket &serverSocket)
 		{
 			string out = "", data;
 			// Conección vía socket con el cliente
@@ -137,6 +137,7 @@ class FTPServer
 				if(ls(args,response))
 				{
 					out = FTPResponse("150","Lista de directorios").getResponse();
+					serverSocket << out;
 					// Enviar lista al cliente
 					try
 					{
@@ -150,25 +151,28 @@ class FTPServer
 							ax << data;
 							pos = pos + min(2048,len-pos);
 						}
-						out += FTPResponse("226", "Directorio enviado").getResponse();
-						
+						out = FTPResponse("226", "Directorio enviado").getResponse();
+						serverSocket << out;
 					} 
 					catch(SocketException &e)
 					{
 						cout<<"Error: "<<e.getMessage()<<endl;
-						out += FTPResponse("450", "Directorio no enviado").getResponse();
+						out = FTPResponse("450", "Directorio no enviado").getResponse();
+						serverSocket << out;
 					}
 				}
 				else
 				{
-					out += FTPResponse("501","Error en los parámetros").getResponse();
+					out = FTPResponse("501","Error en los parámetros").getResponse();
+					serverSocket << out;
 				}
 
 				dataSocket.close();
 			}
 			else 
 			{
-				out += FTPResponse("425","El servidor debe estar en PASV").getResponse();
+				out = FTPResponse("425","El servidor debe estar en PASV").getResponse();
+				serverSocket << out;
 			}
 			return out;
 		}
@@ -217,14 +221,12 @@ class FTPServer
 				{
 					try
 					{
-						cout<<"Entro"<<endl;
 						server.accept(*serverSocket);
 						//Se debería crear un proceso hijo, de lo contrario cierra el socket
 						if(!fork())
 						{
 							server.close();
 							communicate(serverSocket);
-							cout<<"Salgo"<<endl;
 							(*serverSocket).close();
 							exit(0);
 						}
@@ -315,8 +317,7 @@ class FTPServer
 						}
 						else if(cmd=="LIST" && isLogged)
 						{
-							responseMsg = listDir(*dataSocket,args);
-							*serverSocket << responseMsg;
+							responseMsg = listDir(*dataSocket,args,*serverSocket);
 						}
 						else if(cmd=="CWD" && args.size() && isLogged)
 						{
