@@ -70,10 +70,23 @@ int isANumber(string s)
 
 void renameFile(stringstream &data, int &code, string file, string directory)
 {
-	if(rename(file.c_str(), directory.c_str()))
+	if(!rename(file.c_str(), directory.c_str()))
 	{
 		code = 1;
 		data<<"Se ha cambiado el archivo: "<<directory<<endl;
+	}
+	else
+	{
+		data<<"Ha ocurrido un error: "<<strerror(errno)<<endl;
+	}
+}
+
+void rm(stringstream &data, int &code, string file)
+{
+	if(!remove(file.c_str()))
+	{
+		code = 1;
+		data<<"Se ha eliminado el archivo: "<<file<<endl;
 	}
 	else
 	{
