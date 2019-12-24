@@ -299,7 +299,7 @@ class FTPServer
 						}
 						else if(cmd=="PWD"  && !args.size() && isLogged)
 						{
-							responseMsg = FTPResponse("257","\""+pwd()+"\"").getResponse();
+							responseMsg = FTPResponse("257",pwd()).getResponse();
 							*serverSocket << responseMsg;
 						}
 						else if(cmd=="MKD" && args.size() && isLogged)
@@ -433,10 +433,11 @@ class FTPServer
 							ServerSocket temp_socket;
 							stringstream res_stream;
 
-							if(isBinaryMode){
+							if(isBinaryMode)
+							{
 								if((*dataSocket).getFD() != -1 )
 								{
-									ifstream in(args.c_str(), ios::in| ios::binary| ios::ate);
+									ifstream in(args.c_str(), ios::in | ios::binary | ios::ate);
 
 									if(in)
 									{

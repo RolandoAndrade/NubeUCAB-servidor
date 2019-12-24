@@ -68,6 +68,19 @@ int isANumber(string s)
 	return 1;
 }
 
+void renameFile(stringstream &data, int &code, string file, string directory)
+{
+	if(rename(file.c_str(), directory.c_str()))
+	{
+		code = 1;
+		data<<"Se ha cambiado el archivo: "<<directory<<endl;
+	}
+	else
+	{
+		data<<"Ha ocurrido un error: "<<strerror(errno)<<endl;
+	}
+}
+
 /*Obtener contraseña en consola linux*/
 string getPassword()
 {
