@@ -68,6 +68,20 @@ class FTPServer
 			return code;
 		}
 
+
+		/*Eliminar archivos del directorio*/
+
+		int rm(string args, string &response, int print = 0)
+		{
+			int code;
+			string response = execute("rm",args,code);
+			if(print)
+			{
+				cout<<response;
+			}
+			return code;
+		}
+
 		/*Información del sistema*/
 
 		string uname(int print = 0)
@@ -496,7 +510,7 @@ class FTPServer
 						}
 						else if(cmd=="RENM" && args.size())
 						{
-							
+
 						}
 						else if(!isLogged)
 						{
