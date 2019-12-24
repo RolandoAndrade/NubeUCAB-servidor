@@ -528,8 +528,21 @@ class FTPServer
 							{
 								responseMsg = FTPResponse("250","Renombrado").getResponse();
 							}
-							else{
+							else
+							{
 								responseMsg = FTPResponse("550","No se ha podido renombrar el directorio").getResponse();
+							}
+							*serverSocket << responseMsg;
+						}
+						else if(cmd=="REMV" && args.size())
+						{
+							if(rm(args))
+							{
+								responseMsg = FTPResponse("250","Eliminado").getResponse();
+							}
+							else
+							{
+								responseMsg = FTPResponse("550","No se ha podido eliminar el directorio").getResponse();
 							}
 							*serverSocket << responseMsg;
 						}
