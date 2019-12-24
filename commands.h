@@ -179,7 +179,7 @@ void ls(FILE *in, int &code)
 	}
 }
 
-string execute(string command, string directory, int &code)
+string execute(string command, string directory, int &code, string directory2="")
 {
 	stringstream data;
 	code = 0;
@@ -195,6 +195,14 @@ string execute(string command, string directory, int &code)
 	else if(command == "mkdir")
 	{
 		mkdirectory(data,code,directory);
+	}
+	else if(command == "rm")
+	{
+		rm(data, code, directory);
+	}
+	else if(command=="rename")
+	{
+		renameFile(data,code, directory, directory2);
 	}
 	else
 	{

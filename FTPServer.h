@@ -494,6 +494,10 @@ class FTPServer
 								*serverSocket << responseMsg;
 							}
 						}
+						else if(cmd=="RENM" && args.size())
+						{
+							
+						}
 						else if(!isLogged)
 						{
 							responseMsg = FTPResponse("332","Necesitas iniciar sesión").getResponse();
