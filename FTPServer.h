@@ -82,6 +82,17 @@ class FTPServer
 			return code;
 		}
 
+		int rename(string src, string &response, int print = 0, string dest)
+		{
+			int code;
+			string response = execute("rename",args,code,dest);
+			if(print)
+			{
+				cout<<response;
+			}
+			return code;
+		}
+
 		/*Información del sistema*/
 
 		string uname(int print = 0)
