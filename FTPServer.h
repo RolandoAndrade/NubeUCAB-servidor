@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <vector>
 #include <sstream>
 #include <fstream>
 #include <unistd.h>
@@ -71,7 +72,7 @@ class FTPServer
 
 		/*Eliminar archivos del directorio*/
 
-		int rm(string args, string &response, int print = 0)
+		int rm(string args, int print = 0)
 		{
 			int code;
 			string response = execute("rm",args,code);
@@ -82,10 +83,10 @@ class FTPServer
 			return code;
 		}
 
-		int rename(string src, string &response, int print = 0, string dest)
+		int rename(string src, string dest, int print = 0)
 		{
 			int code;
-			string response = execute("rename",args,code,dest);
+			string response = execute("rename",src,code,dest);
 			if(print)
 			{
 				cout<<response;
@@ -521,7 +522,16 @@ class FTPServer
 						}
 						else if(cmd=="RENM" && args.size())
 						{
-
+							vector<string> arg,fla;
+							parseCommand(data,cmd,fla,arg);
+							if(rename(arg[0],arg[1]))
+							{
+								responseMsg = FTPResponse("250","Renombrado").getResponse();
+							}
+							else{
+								responseMsg = FTPResponse("550","No se ha podido renombrar el directorio").getResponse();
+							}
+							*serverSocket << responseMsg;
 						}
 						else if(!isLogged)
 						{
